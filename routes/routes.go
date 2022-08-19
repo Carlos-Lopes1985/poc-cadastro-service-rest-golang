@@ -1,20 +1,21 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Carlos-Lopes1985/go-rest-api/handlers"
+	"github.com/go-chi/chi/v5"
 )
 
 func HandleRequest() {
 
-	//r := chi.newRouter()
-	//r.Post("/", handlers.Create)
+	r := chi.NewRouter()
 
-	//	http.ListenAndServe(fmt.Sprintf(":%s", configs.GetServerPort()), r)
+	r.Get("/milhas/{cpf}", handlers.GetTotalMilhasCliente)
+	r.Post("/milhas", handlers.Create)
 
-	http.HandleFunc("/", handlers.Create)
-	//	http.HandleFunc("/articles", controllers.GetArticles)
-	//http.HandleFunc("/milhas", controllers.GetMilhas)
-	//log.Fatal(http.ListenAndServe(":8085", nil))
+	fmt.Println("Servidor iniciado com sucesso!")
+
+	http.ListenAndServe(":3000", r)
 }

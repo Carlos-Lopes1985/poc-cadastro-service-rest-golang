@@ -4,7 +4,6 @@ import (
 	"log"
 )
 
-// Compra
 type Compra struct {
 	ID_Cartao    int     `json:"id_cartao"`
 	Cpf_Cliente  string  `json:"cpf_cliente"`
@@ -16,52 +15,29 @@ type Milhas struct {
 	Valor_Total_Milhas int    `json:"valor_total_milhas"`
 }
 
-// Compras
-var compras []Compra
-
-func ReturnCalculoMilhas(cpf string) Milhas {
-
-	compras, err := FindCpf(cpf)
-
-	if err != nil {
-		log.Printf("Erro Calculo de milhas: %v", compras)
-
-	}
+func ReturnCalculoMilhas(cpf string) (milhas Milhas, err error) {
 
 	var total_compra float32 = 0
 	var total_milhas int = 0
 
+	compras, err := FindCpf(cpf)
+
+	if err != nil {
+		log.Printf("Erro Calculo de milhas: %v", err)
+		return milhas, err
+	}
+
 	for _, element := range compras {
 		total_compra += element.Valor_Compra
-		log.Printf("0001: %f", total_compra)
 	}
 
 	total_milhas = int(total_compra / 7)
 
 	log.Printf("Total Milhas: %d", total_milhas)
 
-	var milhas = Milhas{
+	milhas = Milhas{
 		cpf, total_milhas,
 	}
 
-	log.Printf("MILHAS: %v", milhas)
-
-	return milhas
+	return milhas, nil
 }
-
-/* func ReturnListCompras() []Compra {
-	Compras = []Compra{
-		Compra{ID_Cartao: 12,
-			Cpf_Cliente:  "12345678900",
-			Valor_Compra: 200.00},
-		Compra{ID_Cartao: 12,
-			Cpf_Cliente:  "12345678900",
-			Valor_Compra: 4550.37},
-	}
-	return Compras
-}
-
-func ReturnTotalMilhas() int {
-	return ReturnCalculoMilhas(ReturnListCompras())
-}
-*/

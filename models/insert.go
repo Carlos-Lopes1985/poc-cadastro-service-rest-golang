@@ -25,19 +25,17 @@ func Insert(compras Compra) (id int64, err error) {
 
 func FindCpf(cpf string) (compras []Compra, err error) {
 
-	log.Printf("INICIO FINDCPF: %v", cpf)
-
 	conn, err := db.OpenConnection()
 
 	if err != nil {
-		log.Printf("ERRO BANCO:")
+		log.Printf("Erro de conexão com o banco de dados: %v", err)
 		return nil, err
 	}
 
 	rows, err := conn.Query(`SELECT cpf as Cpf_Cliente, id_cartao as Id_Cartao, valor_compra as Valor_Compra FROM milhas WHERE cpf=$1`, cpf)
 
 	if err != nil {
-		log.Printf("ERRO QUERY:")
+		log.Printf("Erro ao realizar a busca pelo cpf: %v", err)
 		return nil, err
 	}
 
@@ -59,13 +57,13 @@ func FindCpf(cpf string) (compras []Compra, err error) {
 			&compra.ID_Cartao,
 			&compra.Valor_Compra,
 		)
+
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println(compra)
+
 		compras = append(compras, compra)
 	}
-
 	return compras, nil
 }
 
