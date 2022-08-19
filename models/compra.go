@@ -1,6 +1,8 @@
 package models
 
-import "log"
+import (
+	"log"
+)
 
 // Compra
 type Compra struct {
@@ -21,10 +23,6 @@ func ReturnCalculoMilhas(cpf string) Milhas {
 
 	compras, err := FindCpf(cpf)
 
-	log.Printf("0003: %v", compras)
-
-	log.Printf("CPF CALCULO MILHAS: %v", cpf)
-
 	if err != nil {
 		log.Printf("Erro Calculo de milhas: %v", compras)
 
@@ -35,13 +33,12 @@ func ReturnCalculoMilhas(cpf string) Milhas {
 
 	for _, element := range compras {
 		total_compra += element.Valor_Compra
-
 		log.Printf("0001: %f", total_compra)
 	}
 
 	total_milhas = int(total_compra / 7)
 
-	log.Printf("0002: %d", total_milhas)
+	log.Printf("Total Milhas: %d", total_milhas)
 
 	var milhas = Milhas{
 		cpf, total_milhas,

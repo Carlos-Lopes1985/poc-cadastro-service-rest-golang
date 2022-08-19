@@ -2,7 +2,9 @@
 port = "9000"
 
 [database]
+
 host = "localhost"
 user = "postgres"
 pass = "371casa1"
-name = "postgres" 
+name = "postgres"
+port = "5432"

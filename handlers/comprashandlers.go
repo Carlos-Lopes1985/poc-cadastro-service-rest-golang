@@ -60,11 +60,11 @@ func GetTotalMilhasCliente(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("OBJETO MILHAS: %v", milhas)
 
-	//if err != nil {
-	//		log.Printf("Erro ao fazer o decode json: %v", err)
-	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-	//		return
-	//	}
+	// if err != nil {
+	// 	log.Printf("Erro ao fazer o decode json: %v", err)
+	// 	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	// 	return
+	// }
 
 	w.Header().Add("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(milhas)

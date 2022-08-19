@@ -21,9 +21,11 @@ func main() {
 	}
 
 	r := chi.NewRouter()
+
 	r.Get("/milhas/{cpf}", handlers.GetTotalMilhasCliente)
 
 	r.Post("/milhas", handlers.Create)
+
 	http.ListenAndServe(":3000", r)
 
 }

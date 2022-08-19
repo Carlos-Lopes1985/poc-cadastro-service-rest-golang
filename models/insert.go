@@ -2,6 +2,7 @@ package models
 
 import (
 	"log"
+	"reflect"
 
 	"github.com/Carlos-Lopes1985/go-rest-api/db"
 )
@@ -33,30 +34,37 @@ func FindCpf(cpf string) (compras []Compra, err error) {
 		return nil, err
 	}
 
-	rows := conn.QueryRow(`SELECT * FROM milhas WHERE id_milhas=$1`, 1)
+	rows, err := conn.Query(`SELECT cpf as Cpf_Cliente, id_cartao as Id_Cartao, valor_compra as Valor_Compra FROM milhas WHERE cpf=$1`, cpf)
 
-	//if err != nil {
-	//	log.Printf("ERRO QUERY:")
-	//	return nil, err
-	//}
+	if err != nil {
+		log.Printf("ERRO QUERY:")
+		return nil, err
+	}
 
 	defer conn.Close()
 
-	log.Printf("ROWS: %v", rows)
-	log.Printf("ERROS: %v", err)
+	for rows.Next() {
+		compra := Compra{}
 
-	//for rows.Next() {
-	var compra Compra
+		s := reflect.ValueOf(&compra).Elem()
+		numCols := s.NumField()
+		columns := make([]interface{}, numCols)
+		for i := 0; i < numCols; i++ {
+			field := s.Field(i)
+			columns[i] = field.Addr().Interface()
+		}
 
-	err = rows.Scan(&compra.ID_Cartao, &compra.Cpf_Cliente,
-		&compra.Valor_Compra)
-
-	log.Printf("LOOP QUERY: %v", compra)
-
-	compras = append(compras, compra)
-
-	log.Printf("INICIO FINDCPF: %v", compras)
-	//}
+		err := rows.Scan(
+			&compra.Cpf_Cliente,
+			&compra.ID_Cartao,
+			&compra.Valor_Compra,
+		)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println(compra)
+		compras = append(compras, compra)
+	}
 
 	return compras, nil
 }
