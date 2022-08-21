@@ -15,6 +15,12 @@ type Milhas struct {
 	Valor_Total_Milhas int    `json:"valor_total_milhas"`
 }
 
+type Cartao struct {
+	Code  int
+	Name  string
+	Value float32
+}
+
 func ReturnCalculoMilhas(cpf string) (milhas Milhas, err error) {
 
 	var total_compra float32 = 0

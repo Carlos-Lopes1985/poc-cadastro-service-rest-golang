@@ -1,0 +1,2 @@
+FLUSHDB
+HSET "REPOSITORY_ID_CARTAO" "1233" "{\"code\":1233,\"name\":\"Porto Seguro\",\"valor\":1.5}" "1244" "{\"code\":1244,\"name\":\"Americanas\",\"valor\":2}" "1255" "{\"code\":1255,\"name\":\"Casas Bahia\",\"valor\":0.5}"

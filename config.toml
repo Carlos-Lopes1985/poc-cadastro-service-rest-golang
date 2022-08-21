@@ -5,6 +5,6 @@ port = "9000"
 
 host = "localhost"
 user = "postgres"
-pass = "371casa1"
-name = "postgres"
+pass = "1234"
+name = "milhasdb"
 port = "5432"

@@ -1,10 +1,75 @@
 version: "3"
 
 services:
+  redis:
+    container_name: redis
+    hostname: redis
+    image: redis:6.2.6
+    ports:
+      - "6379:6379"
+    networks:
+      - postgres-compose-network
+  
+  redis-domain-cli:
+    build:
+      dockerfile: redis.dockerfile
+      context: docker/redis/data
+    entrypoint: /bin/sh -c
+    command: > 
+      "
+        sleep 5
+        sh /usr/local/insert.sh
+      "
+    networks:
+      - postgres-compose-network
+    depends_on:
+    - redis
+  
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander
+    restart: always
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8086:8081"
+    networks:
+      - postgres-compose-network
+    depends_on:
+      - redis
+
   app:
     build: .
-    container_name: cadastro-cliente
+    container_name: cadastro-cliente-teste
     volumes:
       - .:/go/src/
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
+  
+  teste-postgres-compose:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "1234"
+    ports:
+      - "5432:5432"
+    volumes:
+      - /home/renatogroffe/Desenvolvimento/Docker-Compose/PostgreSQL:/var/lib/postgresql/data 
+    networks:
+      - postgres-compose-network
+      
+  teste-pgadmin-compose:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "carlosslopes1985@hotmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "1234"
+    ports:
+      - "16543:80"
+    depends_on:
+      - teste-postgres-compose
+    networks:
+      - postgres-compose-network
+
+networks: 
+  postgres-compose-network:
+    driver: bridge
