@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/Carlos-Lopes1985/go-rest-api/configs"
@@ -11,9 +12,9 @@ import (
 func main() {
 
 	type Cartao struct {
-		Code  int
-		Name  string
-		Value float32
+		Code  int     `json:"code"`
+		Name  string  `json:"name"`
+		Value float32 `json:"valor"`
 	}
 
 	fmt.Println("Iniciando o servidor Rest com Go...")
@@ -42,12 +43,28 @@ func main() {
 		fmt.Println(err)
 	}
 
-	var cartao Cartao
+	/*
+		type Request struct {
+			Operation string      `json:"operation"`
+			Key string            `json:"key"`
+			Value string          `json:"value"`
+		}
+
+		func main() {
+			s := string(`{"operation": "get", "key": "example"}`)
+			data := Request{}
+			json.Unmarshal([]byte(s), &data)
+			fmt.Printf("Operation: %s", data.Operation)
+		}
+	*/
+
+	cartao := Cartao{}
+	json.Unmarshal([]byte(val), &cartao)
 
 	//p := Cartao{}
 	//client.Scan(val, &p)
-	fmt.Println("VALOR...")
-	fmt.Println(val)
+	fmt.Printf("VALOR... %f", cartao.Value)
+	fmt.Println("")
 
 	if err != nil {
 		panic(err)
