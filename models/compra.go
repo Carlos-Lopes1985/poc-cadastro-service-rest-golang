@@ -23,13 +23,14 @@ type Milhas struct {
 type Cartao struct {
 	Code  int
 	Name  string
-	Value float32
+	Valor float32
 }
 
 func ReturnValorRedis(id string) (valor float32) {
 	conn, err := db.OpenConnectionRedis()
 
 	val, err := conn.HGet("REPOSITORY_ID_CARTAO", id).Result()
+
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -37,10 +38,10 @@ func ReturnValorRedis(id string) (valor float32) {
 	cartao := Cartao{}
 	json.Unmarshal([]byte(val), &cartao)
 
-	fmt.Printf("VALOR... %f", cartao.Value)
+	fmt.Printf("VALOR... %f", cartao.Valor)
 	fmt.Println("")
 
-	var valor_milhas_cartao float32 = cartao.Value
+	var valor_milhas_cartao float32 = cartao.Valor
 
 	return valor_milhas_cartao
 }
@@ -60,7 +61,7 @@ func ReturnCalculoMilhas(cpf string) (milhas Milhas, err error) {
 	}
 
 	for _, element := range compras {
-		total_compra += element.Valor_Compra
+		total_compra = element.Valor_Compra
 		s := strconv.Itoa(element.ID_Cartao)
 		var retorno_valor_milhas float32 = 0
 
@@ -68,12 +69,10 @@ func ReturnCalculoMilhas(cpf string) (milhas Milhas, err error) {
 
 		log.Printf("Retorno busca REDIS: %v", retorno_valor_milhas)
 
-		total_milhas = int(total_compra * retorno_valor_milhas)
+		total_milhas += int(total_compra * retorno_valor_milhas)
 
 		log.Printf("Retorno Calculo Milhas: %d", total_milhas)
 	}
-
-	//total_milhas = int(total_compra * 0.5)
 
 	log.Printf("Total Milhas: %d", total_milhas)
 
